@@ -2,8 +2,15 @@
 import pygame, sys
 from pygame.locals import *
 
-# import os
+import os
 # os.environ['SDL_AUDIODRIVER'] = 'dsp'
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 import random
 import math
@@ -11,8 +18,10 @@ import math
 pygame.init()
 
 pygame.mixer.init()
-    
-pygame.mixer.music.load("Digital Days.mp3")
+
+asset_url = resource_path("Digital Days.mp3")
+
+pygame.mixer.music.load(asset_url)
 pygame.mixer.music.set_volume(0.7)
 pygame.mixer.music.play(-1)
 
@@ -44,7 +53,8 @@ FPS = pygame.time.Clock()
 class player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("karel.png")
+        asset_url = resource_path("karel.png")
+        self.image = pygame.image.load(asset_url)
         self.rect = self.image.get_rect()
         self.rect.center = (width / 2, height - 70)
         
@@ -59,8 +69,9 @@ class player(pygame.sprite.Sprite):
 
 class tennis_ball(pygame.sprite.Sprite):
     def __init__(self):
-        super().__init__() 
-        self.image = pygame.image.load("tennis_ball.png")
+        super().__init__()
+        asset_url = resource_path("tennis_ball.png") 
+        self.image = pygame.image.load(asset_url)
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, width - 40), 0) 
     
