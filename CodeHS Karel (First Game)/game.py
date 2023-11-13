@@ -1,5 +1,5 @@
 # Import all libraries needed for this game and start PyGame and play music
-import pygame
+import pygame, sys
 from pygame.locals import *
 
 # import os
@@ -85,14 +85,14 @@ karel = player()
 
 while True:
     for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
+        if event.type == pygame.QUIT:
+            sys.exit()
             pygame.mixer.music.stop()
             
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 pygame.mixer.music.stop()
-                pygame.quit()
+                sys.exit()
                 running = False
 
     karel.update()
