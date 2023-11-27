@@ -13,15 +13,15 @@ from pygame import (
 )
 
 pygame.init()
-pygame.display.set_caption("Missile Dodge (Horrible Game)")
+pygame.display.set_caption("Missile Dodge by Jack Shorenstein")
 
 pygame.mixer.init()
-pygame.mixer.music.load("Missile Dodge/axelf.mp3")
+pygame.mixer.music.load("bombsoverbrooklyn.mp3")
 pygame.mixer.music.set_volume(0.7)
 pygame.mixer.music.play(-1)
 
-screen_height = 600
-screen_width = 800
+screen_height = 768
+screen_width = 1024
 
 screen = pygame.display.set_mode([screen_width, screen_height])
 
@@ -33,11 +33,12 @@ pygame.time.set_timer(addcloud, 250)
 
 # Defining Player, Enemy, and Cloud Classes
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, layer = 0):
         super(Player, self).__init__()
-        self.surf = pygame.image.load("Missile Dodge/pitrizzo-SpaceShip-gpl3-opengameart-24x24.png").convert()
+        self.surf = pygame.image.load("pitrizzo-SpaceShip-gpl3-opengameart-24x24.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
+        self._layer = layer
 
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
@@ -61,7 +62,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
-        self.surf = pygame.image.load("Missile Dodge/spr_missile.png").convert()
+        self.surf = pygame.image.load("spr_missile.png").convert()
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.size = self.surf.get_size()
         self.surf = pygame.transform.scale(self.surf, (int(self.size[0] / 2), int(self.size[1] / 2)))
@@ -81,7 +82,7 @@ class Enemy(pygame.sprite.Sprite):
 class Cloud(pygame.sprite.Sprite):
     def __init__(self):
         super(Cloud, self).__init__()
-        self.surf = pygame.image.load("Missile Dodge/cloud.png").convert()
+        self.surf = pygame.image.load("cloud.png").convert()
         self.surf.set_colorkey((0, 0, 0), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -98,13 +99,13 @@ class Cloud(pygame.sprite.Sprite):
 # Initialize Player Class
 player = Player()
 
-# Create Sprite Groups
+# Create Sprite Groups for Enemies and Clouds
 enemies = pygame.sprite.Group()
 clouds = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
-# Setup Decent FPS (so I won't go more insane...)
+# Setup Decent FPS
 clock = pygame.time.Clock()
 
 # Game Loop
@@ -133,6 +134,8 @@ while running:
 
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
+    
+    screen.blit(player.surf, player.rect)
 
     if pygame.sprite.spritecollideany(player, enemies):
         player.kill()
