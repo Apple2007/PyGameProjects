@@ -36,9 +36,10 @@ pygame.time.set_timer(addalien, 1500)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
-        self.wrong = pygame.image.load("player.png").convert()
+        player_sprites = ["player.png", "player_lightblue.png", "player_orange.png", "player_pink.png"]
+        self.wrong = pygame.image.load(random.choice(player_sprites)).convert()
         self.surf = pygame.transform.scale(self.wrong, (30, 30))
-        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        self.surf.set_colorkey((0, 0, 0), RLEACCEL)
         self.rect = self.surf.get_rect(
             midbottom=(
                 screen_width / 2,
@@ -63,7 +64,7 @@ class Alien(pygame.sprite.Sprite):
         sprites_list = ["alien.png", "alien_blue.png", "alien_red.png", "alien_purple.png"]
         self.wrong = pygame.image.load(random.choice(sprites_list)).convert()
         self.surf = pygame.transform.scale(self.wrong, (40, 40))
-        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
+        self.surf.set_colorkey((0, 0, 0), RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
                 random.randint(0, screen_width),
@@ -78,7 +79,7 @@ class Alien(pygame.sprite.Sprite):
             running = False
             self.kill()
 
-class Bullit(pygame.sprite.Sprite):
+class Bullet(pygame.sprite.Sprite):
     def __init__(self, player):
         super().__init__()
         self.surf = pygame.surface.Surface((10, 10))
@@ -100,7 +101,7 @@ player = Player()
 
 # Sprite Group for Aliens
 aliens = pygame.sprite.Group()
-bullit = pygame.sprite.Group()
+bullet = pygame.sprite.Group()
 
 # Game Loop
 running = True
@@ -112,7 +113,7 @@ while running:
                 running = False
             if event.key == pygame.K_SPACE:
                 bullitsound.play()
-                bullit.add(Bullit(player))
+                bullet.add(Bullet(player))
 
         if event.type == QUIT:
             running = False
@@ -140,11 +141,11 @@ while running:
         player.kill()
         running = False
 
-    for entity in bullit:
+    for entity in bullet:
         entity.update()
         screen.blit(entity.surf, entity.rect)
 
-    if pygame.sprite.groupcollide(bullit, aliens, True, True):
+    if pygame.sprite.groupcollide(bullet, aliens, True, True):
         explodesound.play()
         score += 1
 
